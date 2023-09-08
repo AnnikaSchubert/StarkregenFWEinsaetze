@@ -11,8 +11,21 @@
 
 
 # To dos:
+# bis Montag (was schaffbar ist):
+# - F: Toggle Cluster als default setzten, also keinen Regler sondern das einfach 
+#   im Hintergrund als Anzeige festlegen
+# - F: Kreisfarben ändern; aktuell ist die Abstufung rot, grün, gelb, orange, 
+#      das finde ich etwas verwirrend. Vielleicht können wir uns da an Farbskalen 
+#      (z.B. Viridis Color Palettes: inferno und dann dort vier Farben rausnehmen, 
+#      mit dunkel rot als extremster Ausprägung)?
+# - A: Hinweistext verfassen
+# - F: Beschriftung in Deutsch ändern (Der Button zum schließen des ActionButtons ist noch Englisch)
+
+  
+
+# Irgendwann mal:
 # - Pfade mit here package setzen (Erklärung s. https://claudius-graebner.com/teaching/20_10_CosimaR/2_Projektsetup.pdf)
-# - 
+# - renv anlegen (Erklärung s. https://claudius-graebner.com/teaching/20_10_CosimaR/2_Projektsetup.pdf)
 
 
 # Felix
@@ -21,8 +34,7 @@
 #data <- read.xlsx('C:/Users/Felix/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE Shiny/Feuerwehreinsaetze/Firebrigade_Kopie.xlsx', sheet = 1)
 
 # Annika
-setwd('D:/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE Shiny/Feuerwehreinsaetze')
-
+setwd('D:/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE_FirebrigadeMap')
 
 
 library(shiny)
@@ -34,8 +46,7 @@ library(shiny)
 library(shinyBS)
 
 
-
-data <- read.xlsx('Firebrigade_Kopie.xlsx', sheet = 1)
+data <- read.xlsx('data/Firebrigade_Kopie.xlsx', sheet = 1)
 
 
 ui <- fluidPage(
@@ -68,7 +79,7 @@ ui <- fluidPage(
     "))
   ),
   div(class = "title-bar",
-      h1("Feuerwehreinsätze aufgrund von Starkregen"),
+      h1("Feuerwehreinsätze im Oberland aufgrund von Starkregen"),
       div(class = "logo-container",
           a(href="https://klimaanpassung-oberland.de/",
             img(src="KARE-Logo-quer-mitClaim-RGB.png",
@@ -81,14 +92,14 @@ ui <- fluidPage(
     column(width = 12,
            div(class = "button-container",
                div(class = "slider-container",
-                   sliderInput('date_range', 'Select Date Range',
+                   sliderInput('date_range', 'Zeitraum auwählen',
                                min = as.Date("2011-01-01"), max = as.Date("2021-12-31"),
                                value = c(as.Date("2011-01-01"), as.Date("2021-12-31")))
                ),
                div(class = "toggle-container",
                    shinyWidgets::switchInput("toggleButton", "Toggle Clustering", value = TRUE)
                ),
-               actionButton('show_about', 'About')
+               actionButton('show_about', 'Mehr Informationen')
            )
     )
   ),
@@ -103,7 +114,9 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   observeEvent(input$show_about, {
-    showModal(modalDialog("Placeholder"))
+    showModal(modalDialog("Die Webanwendung basiert auf Einsatzerhebungen der Feuerwehren im Zeitraum von 2011 bis 2021. 
+                           Die Daten wurden dem KARE-Team freundlicherweise von den Feuwehren X, X und X zur Verfügung gestellt.
+                           "))
   })
   
   clusteringEnabled <- reactiveVal(TRUE)
