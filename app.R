@@ -114,9 +114,10 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   observeEvent(input$show_about, {
-    showModal(modalDialog("Die Webanwendung basiert auf Einsatzerhebungen der Feuerwehren im Zeitraum von 2011 bis 2021. 
-                           Die Daten wurden dem KARE-Team freundlicherweise von den Feuwehren X, X und X zur Verfügung gestellt.
-                           "))
+    showModal(modalDialog(HTML("Die Webanwendung basiert auf Einsatzerhebungen der Feuerwehren im Zeitraum von Januar 2011 bis Dezember 2021. Der Datensatz um fasst alle Einsätze im Oberland, die in Zusammenhang mit Unwettern und/oder Überschwemmungen und/oder Wasserschäden stehen. Diese Daten wurden dem KARE-Team freundlicherweise von den Feuerwehren X, X, X und X zur Verfügung gestellt.<br><br> 
+                          Die Daten wurden von der LMU München aufbereitet und vom IMK-IFU KIT georeferenziert. Um sicherzustellen, dass Einsätze mit hoher Wahrscheinlichkeit auf Starkregenereignisse zurückzuführen sind, wurden zwei Ansätze gewählt. Zunächst wurden alle Einsatzdaten mit dem Katalog der Starkregenereignisse (CatRaRE) vergleichen. Für Einsätze, die weder zeitlich noch räumlich mit den Starkregenereignissen zusammenhingen, wurden zudem eine Medienanalyse in Zeitungen und auf Websiten der Feuerwehr durchgeführt, um Einsätze aufgrund anderer Ursachen als Starkregen (z.B. Wasserrohrbruch) auszuschließen.<br><br> 
+                          Um die Anonymität der betroffenen Haushalte zu gewährleisten, wurden die Daten verändert. Die GPS-Koordinate zeigt nicht den genauen Standort des betroffenen Gebäudes an, sondern variiert zufällig um etwa 40 m.<br><br>
+                          Sollten Sie weitere Fragen haben, wenden Sie sich bitte an Annika.Schubert@lmu.de.")))
   })
   
   clusteringEnabled <- reactiveVal(TRUE)
