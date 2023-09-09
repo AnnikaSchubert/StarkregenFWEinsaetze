@@ -17,7 +17,8 @@
 # - F: Kreisfarben ändern; aktuell ist die Abstufung rot, grün, gelb, orange, 
 #      das finde ich etwas verwirrend. Vielleicht können wir uns da an Farbskalen 
 #      (z.B. Viridis Color Palettes: inferno und dann dort vier Farben rausnehmen, 
-#      mit dunkel rot als extremster Ausprägung)?
+#      mit dunkel rot als extremster Ausprägung)? --> Erledigt, aber ohne Viridis. Gab Komplikationen, die Farbe der individuellen Cases war nicht einheitlich, hab ich leider nicht geöst bekommen
+#      --> Hab jetzt ursprüngliche Abstufung belassen (macht soweit eigentlich Sinn würde ich sagen) und die Farbe der Cases geändert (jetzt grau, kann in Zeile 124 und 125 geändert werden)
 # - A: Hinweistext verfassen
 # - F: Beschriftung in Deutsch ändern (Der Button zum schließen des ActionButtons ist noch Englisch) --> Erledigt
 
@@ -29,12 +30,12 @@
 
 
 # Felix
-setwd('C:/Users/flexi/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE Shiny/Feuerwehreinsaetze')
+#setwd('C:/Users/flexi/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE Shiny/Feuerwehreinsaetze')
 data <- read.xlsx('C:/Users/flexi/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE Shiny/Feuerwehreinsaetze/Firebrigade_Kopie.xlsx', sheet = 1)
 #data <- read.xlsx('C:/Users/Felix/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE Shiny/Feuerwehreinsaetze/Firebrigade_Kopie.xlsx', sheet = 1)
 
 # Annika
-setwd('D:/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE_FirebrigadeMap')
+#setwd('D:/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE_FirebrigadeMap')
 
 
 library(shiny)
@@ -44,6 +45,7 @@ library(leaflet)
 library(openxlsx)
 library(shiny)
 library(shinyBS)
+library(viridis)
 
 data <- read.xlsx('data/Firebrigade_Kopie.xlsx', sheet = 1)
 
@@ -76,17 +78,20 @@ ui <- fluidPage(
   ),
   
   fluidRow(
-    column(width = 12,
+    column(width = 6, 
+           div(class = "slider-container",
+               sliderInput('date_range', 'Zeitraum auwählen',
+                           min = as.Date("2011-01-01"), max = as.Date("2021-12-31"),
+                           value = c(as.Date("2011-01-01"), as.Date("2021-12-31")))
+           )
+    ),
+    column(width = 6, align = 'right', style = "margin-top: 30px;",
            div(class = "button-container",
-               div(class = "slider-container",
-                   sliderInput('date_range', 'Zeitraum auwählen',
-                               min = as.Date("2011-01-01"), max = as.Date("2021-12-31"),
-                               value = c(as.Date("2011-01-01"), as.Date("2021-12-31")))
-               ),
                actionButton('show_about', 'Mehr Informationen')
            )
     )
   ),
+  
   
   leaflet::leafletOutput('map', height = 'calc(100vh - 200px)')
 )
@@ -116,7 +121,9 @@ server <- function(input, output, session) {
         data = filtered_data(),
         lat = ~lat,
         lng = ~lon,
-        fillColor = 'red', color = 'red', weight = 1,
+        fillColor = 'grey', #change color here and in the next line to adjust the colour of the individual cases
+        color = 'grey', 
+        weight = 1,
         fillOpacity = 0.5,
         clusterOptions = markerClusterOptions(
           spiderfyOnMaxZoom = TRUE,
