@@ -110,7 +110,11 @@ server <- function(input, output, session) {
   
   filtered_data <- reactive({
     data %>%
-      filter(datum >= input$date_range[1], datum <= input$date_range[2])
+      filter(datum >= input$date_range[1], datum <= input$date_range[2]) %>%
+      mutate(
+        lat = lat + (runif(n()) - 0.5) * 0.0004,  # Can be adjusted to change randomness --> 0.0004 = 44.4m, 0.0006 = 66.6m, etc.
+        lon = lon + (runif(n()) - 0.5) * 0.0004
+      )
   })
   
   output$map <- leaflet::renderLeaflet({
@@ -121,7 +125,7 @@ server <- function(input, output, session) {
         data = filtered_data(),
         lat = ~lat,
         lng = ~lon,
-        fillColor = 'grey', #change color here and in the next line to adjust the colour of the individual cases
+        fillColor = 'grey',  # Change color here and in the next line to adjust the color of the individual cases
         color = 'grey', 
         weight = 1,
         fillOpacity = 0.5,
