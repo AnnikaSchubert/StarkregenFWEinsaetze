@@ -31,11 +31,12 @@
 
 # Felix
 #setwd('C:/Users/flexi/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE Shiny/Feuerwehreinsaetze')
-data <- read.xlsx('C:/Users/flexi/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE Shiny/Feuerwehreinsaetze/Firebrigade_Kopie.xlsx', sheet = 1)
+data <- read.xlsx('C:/Users/flexi/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE_FirebrigadeMap/data/Firebrigade_Kopie.xlsx', sheet = 'Sheet für Tool')
 #data <- read.xlsx('C:/Users/Felix/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE Shiny/Feuerwehreinsaetze/Firebrigade_Kopie.xlsx', sheet = 1)
 
 # Annika
 #setwd('D:/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE_FirebrigadeMap')
+
 
 
 library(shiny)
@@ -47,7 +48,7 @@ library(shiny)
 library(shinyBS)
 library(viridis)
 
-data <- read.xlsx('data/Firebrigade_Kopie.xlsx', sheet = 1)
+#data <- read.xlsx('data/Firebrigade_Kopie.xlsx', sheet = 1)
 
 ui <- fluidPage(
   theme = shinythemes::shinytheme('simplex'),
@@ -80,9 +81,10 @@ ui <- fluidPage(
   fluidRow(
     column(width = 6, 
            div(class = "slider-container",
-               sliderInput('date_range', 'Zeitraum auwählen',
+               sliderInput('date_range', 'Zeitraum auswählen',
                            min = as.Date("2011-01-01"), max = as.Date("2021-12-31"),
-                           value = c(as.Date("2011-01-01"), as.Date("2021-12-31")))
+                           value = c(as.Date("2011-01-01"), as.Date("2021-12-31"))
+               )
            )
     ),
     column(width = 6, align = 'right', style = "margin-top: 30px;",
@@ -92,6 +94,11 @@ ui <- fluidPage(
     )
   ),
   
+  fluidRow(
+    column(width = 6,
+           checkboxGroupInput('overlap_filter', 'Starkregenereignis als Einsatzgrund', choices = 1:4, selected = 1:4)
+    )
+  ),
   
   leaflet::leafletOutput('map', height = 'calc(100vh - 200px)')
 )
@@ -100,20 +107,27 @@ server <- function(input, output, session) {
   
   observeEvent(input$show_about, {
     showModal(modalDialog(HTML("Die Webanwendung basiert auf Einsatzerhebungen der Feuerwehren im Zeitraum von Januar 2011 bis Dezember 2021. Der Datensatz umfasst alle Einsätze im Oberland, die in Zusammenhang mit Unwettern und/oder Überschwemmungen und/oder Wasserschäden stehen. Diese Daten wurden dem KARE-Team freundlicherweise von den Feuerwehren X, X, X und X zur Verfügung gestellt.<br><br> 
-                          Die Daten wurden von der LMU München aufbereitet und vom IMK-IFU KIT georeferenziert. Um sicherzustellen, dass Einsätze mit hoher Wahrscheinlichkeit auf Starkregenereignisse zurückzuführen sind, wurden zwei Ansätze gewählt. Zunächst wurden alle Einsatzdaten mit dem Katalog der Starkregenereignisse (CatRaRE) verglichen. Für Einsätze, die weder zeitlich noch räumlich mit den Starkregenereignissen zusammenhingen, wurde zudem eine Medienanalyse in Zeitungen und auf Websites der Feuerwehr durchgeführt, um Einsätze aufgrund anderer Ursachen als Starkregen (z.B. Wasserrohrbruch) auszuschließen.<br><br> 
+                          Die Daten wurden von der LMU München aufbereitet und vom IMK-IFU KIT georeferenziert. Um sicherzustellen, dass Einsätze mit hoher Wahrscheinlichkeit auf Starkregenereignisse zurückzuführen sind, wurden zwei Ansätze gewählt. Zunächst wurden alle Einsatzdaten mit dem Katalog der Starkregenereignissen (CatRaRE) verglichen. Für Einsätze, die weder zeitlich noch räumlich mit den Starkregenereignissen zusammenhingen, wurde zudem eine Medienanalyse in Zeitungen und auf Websites der Feuerwehr durchgeführt, um Einsätze aufgrund anderer Ursachen als Starkregen (z.B. Wasserrohrbruch) auszuschließen.<br><br> 
                           Um die Anonymität der betroffenen Haushalte zu gewährleisten, wurden die Daten verändert. Die GPS-Koordinate zeigt nicht den genauen Standort des betroffenen Gebäudes an, sondern variiert zufällig um etwa 40 m.<br><br>
                           Sollten Sie weitere Fragen haben, wenden Sie sich bitte an Annika.Schubert@lmu.de."),
-                          footer = tagList( #for changing description of close button
-                            modalButton("Schließen") 
+                          footer = tagList(
+                            modalButton("Schließen")
                           )))
   })
   
+  set.seed(123)
+  
   filtered_data <- reactive({
     data %>%
-      filter(datum >= input$date_range[1], datum <= input$date_range[2])
+      filter(datum >= input$date_range[1], datum <= input$date_range[2]) %>%
+      filter(overlap %in% input$overlap_filter) %>%
+      mutate(
+        lat = lat + (runif(n()) - 0.5) * 0.0004,
+        lon = lon + (runif(n()) - 0.5) * 0.0004
+      )
   })
   
-  output$map <- leaflet::renderLeaflet({
+  output$map <- renderLeaflet({
     leaflet() %>%
       addTiles() %>%
       setView(11.4, 47.8, zoom = 10) %>%
@@ -121,8 +135,8 @@ server <- function(input, output, session) {
         data = filtered_data(),
         lat = ~lat,
         lng = ~lon,
-        fillColor = 'grey', #change color here and in the next line to adjust the colour of the individual cases
-        color = 'grey', 
+        fillColor = 'grey',
+        color = 'grey',
         weight = 1,
         fillOpacity = 0.5,
         clusterOptions = markerClusterOptions(
@@ -135,6 +149,7 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
+
 
 #Old code below (as backup, can be deleted if no longer wanted)
 
