@@ -31,7 +31,7 @@
 
 # Felix
 #setwd('C:/Users/flexi/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE Shiny/Feuerwehreinsaetze')
-data <- read.xlsx('C:/Users/flexi/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE Shiny/Feuerwehreinsaetze/Firebrigade_Kopie.xlsx', sheet = 'Sheet für Tool')
+data <- read.xlsx('C:/Users/flexi/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE_FirebrigadeMap/data/Firebrigade_Kopie.xlsx', sheet = 'Sheet für Tool')
 #data <- read.xlsx('C:/Users/Felix/LRZ Sync+Share/Transfer_Hiwi (Anne von Streit)/Felix Bauer/Git/KARE Shiny/Feuerwehreinsaetze/Firebrigade_Kopie.xlsx', sheet = 1)
 
 # Annika
