@@ -19,8 +19,6 @@
 #      (z.B. Viridis Color Palettes: inferno und dann dort vier Farben rausnehmen, 
 #      mit dunkel rot als extremster Ausprägung)? --> Erledigt, aber ohne Viridis. Gab Komplikationen, die Farbe der individuellen Cases war nicht einheitlich, hab ich leider nicht geöst bekommen
 #      --> Hab jetzt ursprüngliche Abstufung belassen (macht soweit eigentlich Sinn würde ich sagen) und die Farbe der Cases geändert (jetzt grau, kann in Zeile 124 und 125 geändert werden)
-# - A: Hinweistext verfassen
-# - F: Beschriftung in Deutsch ändern (Der Button zum schließen des ActionButtons ist noch Englisch) --> Erledigt
 
 
 
