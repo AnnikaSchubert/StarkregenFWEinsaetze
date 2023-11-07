@@ -10,17 +10,8 @@
 ######################################################
 
 
-# To dos:
-# bis Montag (was schaffbar ist):
-# - F: Toggle Cluster als default setzten, also keinen Regler sondern das einfach 
-#   im Hintergrund als Anzeige festlegen --> Erledigt
-# - F: Kreisfarben ändern; aktuell ist die Abstufung rot, grün, gelb, orange, 
-#      das finde ich etwas verwirrend. Vielleicht können wir uns da an Farbskalen 
-#      (z.B. Viridis Color Palettes: inferno und dann dort vier Farben rausnehmen, 
-#      mit dunkel rot als extremster Ausprägung)? --> Erledigt, aber ohne Viridis. Gab Komplikationen, die Farbe der individuellen Cases war nicht einheitlich, hab ich leider nicht geöst bekommen
-#      --> Hab jetzt ursprüngliche Abstufung belassen (macht soweit eigentlich Sinn würde ich sagen) und die Farbe der Cases geändert (jetzt grau, kann in Zeile 124 und 125 geändert werden)
 
-
+#test
 
 # Irgendwann mal:
 # - Pfade mit here package setzen (Erklärung s. https://claudius-graebner.com/teaching/20_10_CosimaR/2_Projektsetup.pdf)
