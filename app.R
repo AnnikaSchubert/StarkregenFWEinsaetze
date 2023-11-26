@@ -45,6 +45,10 @@ ui <- fluidPage(
         display: flex;
         align-items: center;
       }
+      .slider-container h4,
+      .checkbox-container h4{
+      font-weight: bold;
+      }
       .slider-container,
       .checkbox-container,
       .button-container {
@@ -69,10 +73,11 @@ ui <- fluidPage(
   fluidRow(
     column(
       width = 4,
+      align = 'center',
       div(
         class = "slider-container",
         sliderInput(
-          'date_range', 'Zeitraum auswählen',
+          'date_range', h4('Zeitraum auswählen'),
           min = as.Date("2011-01-01"), max = as.Date("2021-12-31"),
           value = c(as.Date("2011-01-01"), as.Date("2021-12-31"))
         )
@@ -84,7 +89,7 @@ ui <- fluidPage(
       div(
         class = "checkbox-container",
         checkboxGroupInput(
-          'overlap_filter', 'Starkregenereignis als Einsatzgrund',#Titel ändern?
+          'overlap_filter', h4('Starkregenereignis als Einsatzgrund'), #Titel ändern?
           choices = list('Option 1' = 1, 'Option 2' = 2, 'Option 3' = 3, 'Option 4' = 4),#Anpassen für korrekte Beschriftung
           selected = 1:4
         )
