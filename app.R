@@ -26,7 +26,7 @@ library(viridis)
 library(here)
 
 here::here()
-data <- read.xlsx(here('data/Firebrigade_Kopie.xlsx'),sheet = 'Sheet für Tool')
+data <- read.xlsx(here('data/Anonymised_FirebrigadeData.xlsx'),sheet = 'Sheet 1')
 
 
 ui <- fluidPage(
@@ -96,7 +96,7 @@ ui <- fluidPage(
       )
     ),
     column(
-      width = 4,
+      width = 2,
       align = 'end',
       div(
         class = "button-container",
