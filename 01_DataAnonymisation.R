@@ -64,7 +64,7 @@ data %>%
 
 
 # save only relevant vars
-Anonymised_Data2 <- data %>% select("datum", "lon", "lat", "overlap")
+Anonymised_Data <- data %>% select("datum", "lon", "lat", "overlap")
 
 # save anonymised data for ShinyApp
-write.xlsx(Anonymised_Data2, file = here('data/tidy/Anonymised_FirebrigadeData2.xlsx'))
+write.xlsx(Anonymised_Data, file = here('data/tidy/Anonymised_FirebrigadeData.xlsx'))
