@@ -24,20 +24,31 @@ library(here)
 
 # 1.1 Load Data ---------------------------
 
-# ERGÄNZEN: Rohdaten laden
+#Rohdaten laden
 here::here()
-# data <- read.xlsx(here('data/Firebrigade_Kopie.xlsx'),sheet = 'Sheet für Tool')
+data <- read.xlsx(here('data/raw/Firebrigade_CatRaRe.xlsx'))
 
 
 # 1.2 Recoding ---------------------------
 
-###
+data$lon <- data$X
+data$lat <- data$Y
+data$datum <- paste(data$year, data$month, data$day, sep = "/")
+data$overlap <- data$Overlap
+
+
+# Recodierung der Overlapp Variable
+# Overlap 4 nur wenn Media == 1 (in Rohdaten)
+data$overlap[data$overlap == 4 & is.na(data$Media)] <- 5
+
+
+
+
 # ERGÄNZEN: nur Starkregeneinsätze
 # Overlap 0 löschen, da wahrscheinlich nicht Starkregen
 
 
-# ERGÄNZEN: Recodierung der Overlapp Variable
-# Overlap 4 nur wenn Media == 1 (in Rohdaten)
+
 
 
 # 1.3 Anonymisation ---------------------------
@@ -53,7 +64,7 @@ data %>%
 
 
 # save only relevant vars
-Anonymised_Data <- data %>% select("datum", "lon", "lat", "overlap")
+Anonymised_Data2 <- data %>% select("datum", "lon", "lat", "overlap")
 
 # save anonymised data for ShinyApp
-write.xlsx(Anonymised_Data, file = here('data/Anonymised_FirebrigadeData.xlsx'))
+write.xlsx(Anonymised_Data2, file = here('data/tidy/Anonymised_FirebrigadeData2.xlsx'))
