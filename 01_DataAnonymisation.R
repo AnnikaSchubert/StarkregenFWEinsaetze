@@ -24,31 +24,40 @@ library(here)
 
 # 1.1 Load Data ---------------------------
 
-#Rohdaten laden
 here::here()
 data <- read.xlsx(here('data/raw/Firebrigade_CatRaRe.xlsx'))
 
 
 # 1.2 Recoding ---------------------------
 
-data$lon <- data$X
-data$lat <- data$Y
+# change variable names
+data <- data %>%
+  rename(lon = X,
+         lat = Y,
+         overlap = Overlap)
+
+# create date string
 data$datum <- paste(data$year, data$month, data$day, sep = "/")
-data$overlap <- data$Overlap
 
 
 # Recodierung der Overlapp Variable
-# Overlap 4 nur wenn Media == 1 (in Rohdaten)
-data$overlap[data$overlap == 4 & is.na(data$Media)] <- 5
+# overlap = 4 only if Media == 1, otherwise overlap 5
+table(data$Media, useNA = "always")
+data$overlap[data$overlap == 4 & is.na(data$Media) |
+             data$overlap == 4 & data$Media == 0] <- 5
+table(data$overlap)
 
 
 
+# 1.3 Sample ---------------------------
 
-# ERGÄNZEN: nur Starkregeneinsätze
-# Overlap 0 löschen, da wahrscheinlich nicht Starkregen
-
-
-
+# keep only fire brigade operations which are classified as very likely
+# due to a heavy precipitation event:
+# - CatRaRE data (overlap 1, 2, 3)
+# - media analysis (overlap 4)
+# for overlap explanation see Excel sheet 'Explanation'
+table(data$overlap, useNA = "always")
+valoperations <- subset(data, overlap > 0 & overlap < 5)
 
 
 # 1.3 Anonymisation ---------------------------
@@ -57,14 +66,14 @@ data$overlap[data$overlap == 4 & is.na(data$Media)] <- 5
 
 set.seed(123)
 
-data %>%
+valoperations <- valoperations %>%
   mutate(
     lat = lat + (runif(n()) - 0.5) * 0.0004,
     lon = lon + (runif(n()) - 0.5) * 0.0004)
 
 
 # save only relevant vars
-Anonymised_Data <- data %>% select("datum", "lon", "lat", "overlap")
+Anonymised_Data <- valoperations %>% select("datum", "lon", "lat", "overlap")
 
 # save anonymised data for ShinyApp
 write.xlsx(Anonymised_Data, file = here('data/tidy/Anonymised_FirebrigadeData.xlsx'))
