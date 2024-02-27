@@ -40,7 +40,8 @@ data <- data %>%
 data$datum <- paste(data$year, data$month, data$day, sep = "/")
 
 
-# Recodierung der Overlapp Variable
+# Overlap variable
+# for overlap explanation see Excel sheet 'Explanation'
 # overlap = 4 only if Media == 1, otherwise overlap 5
 table(data$Media, useNA = "always")
 data$overlap[data$overlap == 4 & is.na(data$Media) |
@@ -49,26 +50,28 @@ table(data$overlap)
 
 
 
-# 1.3 Sample ---------------------------
+# 1.3 Operations due to Heavy Precipitation ---------------------------
 
 # keep only fire brigade operations which are classified as very likely
-# due to a heavy precipitation event:
+# due to a heavy precipitation event; validated by
 # - CatRaRE data (overlap 1, 2, 3)
 # - media analysis (overlap 4)
-# for overlap explanation see Excel sheet 'Explanation'
 table(data$overlap, useNA = "always")
 valoperations <- subset(data, overlap > 0 & overlap < 5)
 
 
 # 1.3 Anonymisation ---------------------------
 
-# change lat and lon randomly by roughly 40 m
+# change lat and lon randomly --> 0.0004 are around 40 meters
+
+# -0.5 adds random noise to the imported coordinates
+# --> Code could be simplified by removing this part and only randomizing through the 0.0004-part I believe
 
 set.seed(123)
 
 valoperations <- valoperations %>%
   mutate(
-    lat = lat + (runif(n()) - 0.5) * 0.0004,
+    lat = lat + (runif(n()) - 0.5) * 0.0004, # Change value to adjust magnitude of randomization --> 0.0004 = 40 meters
     lon = lon + (runif(n()) - 0.5) * 0.0004)
 
 
