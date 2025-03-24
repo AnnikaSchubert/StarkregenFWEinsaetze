@@ -2,7 +2,7 @@
 
 To access the tool, visit: https://klimaanpassung-oberland.shinyapps.io/Starkregen_Feuerwehreinsaetze/
 
-This interactive web application identifies neighborhoods in the Bavarian Oberland that are particularly susceptible to flooding and damage caused by heavy rainfall events. 
+This interactive shiny app identifies neighborhoods in the Bavarian Oberland that are particularly susceptible to flooding and damage caused by heavy rainfall events. 
 
 To inform yourself about potential risk zones, please also refer to the official maps provided by the Bavarian State Office for the Environment (Bayerisches Landesamt für Umwelt): [Hinweiskarte Oberflächenabfluss und Sturzflut][1] 
 
